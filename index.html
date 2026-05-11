@@ -1,1 +1,551 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sterneder Kraus GbR – Professionelle Softwarelösungen für die Baubranche. PKAS Projektplanung, Shopware-Entwicklung, Power Platform & ASP.NET SaaS.">
+  <title>Sterneder Kraus GbR – Digitale Lösungen für die Baubranche</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-primary:       #0B2240;
+      --color-primary-light: #1A4080;
+      --color-primary-mid:   #163461;
+      --color-primary-dark:  #071628;
+      --color-accent:        #E8A020;
+      --color-accent-light:  #F5C842;
+      --color-accent-dark:   #C8841A;
+      --color-bg:            #F8FAFC;
+      --color-bg-alt:        #EEF2F7;
+      --color-text:          #1A2332;
+      --color-text-muted:    #4A5568;
+      --color-white:         #FFFFFF;
+      --color-border:        #E2E8F0;
+      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px;
+      --shadow-md:  0 4px 24px rgba(11,34,64,.12);
+      --shadow-lg:  0 8px 48px rgba(11,34,64,.20);
+      --shadow-acc: 0 4px 24px rgba(232,160,32,.30);
+      --tr: all .3s cubic-bezier(.4,0,.2,1);
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--color-text); background: var(--color-bg); line-height: 1.7; overflow-x: hidden; }
+    h1,h2,h3,h4 { font-family: var(--font-head); line-height: 1.2; font-weight: 700; }
+    h1 { font-size: clamp(2.4rem,5vw,4rem); }
+    h2 { font-size: clamp(1.9rem,3.5vw,2.9rem); }
+    h3 { font-size: clamp(1.2rem,2vw,1.7rem); }
+    h4 { font-size: 1.2rem; }
+    p  { line-height: 1.85; }
+    a  { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section-tag { display: inline-block; color: var(--color-accent); font-size: .82rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
+    .section-title { text-align: center; margin-bottom: 60px; }
+    .section-title h2 { color: var(--color-primary); margin-bottom: 14px; }
+    .section-title p  { color: var(--color-text-muted); font-size: 1.05rem; max-width: 580px; margin: 0 auto; }
+    .title-line { display: block; width: 52px; height: 4px; background: var(--color-accent); border-radius: 2px; margin: 0 auto 16px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 30px; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: .97rem; font-weight: 600; border: 2px solid transparent; cursor: pointer; transition: var(--tr); letter-spacing: .01em; }
+    .btn-primary { background: var(--color-accent); color: var(--color-primary); border-color: var(--color-accent); }
+    .btn-primary:hover { background: var(--color-accent-light); border-color: var(--color-accent-light); transform: translateY(-2px); box-shadow: var(--shadow-acc); }
+    .btn-ghost { background: transparent; color: var(--color-white); border-color: rgba(255,255,255,.4); }
+    .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.8); transform: translateY(-2px); }
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .fade-up.d1 { transition-delay: .10s; } .fade-up.d2 { transition-delay: .20s; }
+    .fade-up.d3 { transition-delay: .30s; } .fade-up.d4 { transition-delay: .40s; }
 
+    /* NAVBAR */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 22px 0; transition: var(--tr); }
+    .navbar.scrolled { background: rgba(11,34,64,.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 14px 0; box-shadow: 0 4px 32px rgba(0,0,0,.3); }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; color: var(--color-white); letter-spacing: -.02em; }
+    .nav-logo em { color: var(--color-accent); font-style: normal; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a { color: rgba(255,255,255,.8); font-size: .88rem; font-weight: 500; padding: 7px 14px; border-radius: var(--radius-sm); transition: var(--tr); }
+    .nav-links a:hover, .nav-links a.active { color: var(--color-accent); background: rgba(232,160,32,.1); }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 6px; z-index: 1001; background: none; border: none; }
+    .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--color-white); border-radius: 1px; transition: var(--tr); }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* HERO */
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--color-primary); overflow: hidden; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-content { position: relative; z-index: 2; text-align: center; max-width: 860px; padding: 0 24px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(232,160,32,.14); border: 1px solid rgba(232,160,32,.3); color: var(--color-accent); font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 7px 20px; border-radius: 100px; margin-bottom: 28px; animation: heroIn .8s .1s ease both; }
+    .hero-title { color: var(--color-white); font-weight: 800; letter-spacing: -.03em; margin-bottom: 22px; animation: heroIn .8s .25s ease both; }
+    .hero-title .accent { color: var(--color-accent); }
+    .hero-sub { color: rgba(240,244,248,.72); font-size: clamp(1rem,1.5vw,1.2rem); max-width: 640px; margin: 0 auto 44px; line-height: 1.85; animation: heroIn .8s .4s ease both; }
+    .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: heroIn .8s .55s ease both; }
+    @keyframes heroIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .scroll-indicator { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,.4); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; animation: heroIn .8s .8s ease both; }
+    .scroll-mouse { width: 23px; height: 36px; border: 2px solid rgba(255,255,255,.25); border-radius: 12px; display: flex; justify-content: center; padding-top: 5px; }
+    .scroll-wheel { width: 3px; height: 6px; background: var(--color-accent); border-radius: 2px; animation: scrollWheel 2s ease-in-out infinite; }
+    @keyframes scrollWheel { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(12px); opacity: 0; } }
+    .wave { line-height: 0; } .wave svg { display: block; width: 100%; }
+
+    /* ÜBER UNS */
+    .ueber-uns { background: var(--color-white); padding: 100px 0; }
+    .uu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; margin-bottom: 60px; }
+    .uu-text h2 { color: var(--color-primary); margin-bottom: 20px; }
+    .uu-text p  { color: var(--color-text-muted); font-size: 1.04rem; }
+    .uu-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .vis-card { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light)); border-radius: var(--radius-md); padding: 26px 22px; color: var(--color-white); display: flex; flex-direction: column; gap: 6px; }
+    .vis-card.gold { background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent)); color: var(--color-primary); }
+    .vis-card.wide { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 18px; background: linear-gradient(135deg, var(--color-primary-mid), var(--color-primary-light)); }
+    .vis-num   { font-family: var(--font-head); font-size: 2.4rem; font-weight: 800; line-height: 1; }
+    .vis-label { font-size: .88rem; opacity: .85; font-weight: 500; }
+    .vis-icon  { font-size: 2.2rem; }
+    .feat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .feat-card { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 30px 26px; transition: var(--tr); }
+    .feat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--color-accent); }
+    .feat-icon { width: 54px; height: 54px; background: linear-gradient(135deg,rgba(232,160,32,.15),rgba(232,160,32,.05)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 18px; }
+    .feat-card h4 { color: var(--color-primary); margin-bottom: 10px; }
+    .feat-card p  { color: var(--color-text-muted); font-size: .93rem; }
+
+    /* PRODUKTE */
+    .produkte { background: var(--color-bg-alt); padding: 100px 0; }
+    .pkas-card { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%); border-radius: var(--radius-lg); padding: 56px 52px; margin-bottom: 80px; position: relative; overflow: hidden; }
+    .pkas-card::before { content: ''; position: absolute; top: -40%; right: -8%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(232,160,32,.1) 0%, transparent 70%); pointer-events: none; }
+    .pkas-card::after  { content: ''; position: absolute; bottom: -30%; left: -4%; width: 380px; height: 380px; background: radial-gradient(circle, rgba(26,64,128,.45) 0%, transparent 70%); pointer-events: none; }
+    .pkas-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--color-accent); color: var(--color-primary); font-size: .78rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 5px 15px; border-radius: 100px; margin-bottom: 22px; }
+    .pkas-body { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: start; position: relative; z-index: 1; }
+    .pkas-left h3  { color: var(--color-white); font-size: clamp(1.4rem,2.4vw,2.1rem); margin-bottom: 18px; }
+    .pkas-left > p { color: rgba(240,244,248,.78); font-size: 1.03rem; line-height: 1.85; margin-bottom: 28px; }
+    .pkas-features { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 32px; }
+    .pkas-feat { display: flex; align-items: center; gap: 9px; color: rgba(240,244,248,.88); font-size: .93rem; }
+    .pkas-feat .chk { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: rgba(232,160,32,.18); display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-size: .7rem; font-weight: 700; }
+    .pkas-mockup { background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-md); overflow: hidden; }
+    .pm-header { background: rgba(0,0,0,.25); padding: 11px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .pm-dots { display: flex; gap: 6px; }
+    .pm-dots i { width: 10px; height: 10px; border-radius: 50%; font-style: normal; }
+    .pm-dots i:nth-child(1) { background: #FF5F56; } .pm-dots i:nth-child(2) { background: #FFBD2E; } .pm-dots i:nth-child(3) { background: #27C93F; }
+    .pm-header span { color: rgba(255,255,255,.5); font-size: .78rem; font-family: monospace; }
+    .pm-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 13px; }
+    .pm-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; }
+    .pm-label { color: rgba(255,255,255,.75); font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pm-bar { width: 110px; height: 5px; background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden; }
+    .pm-bar-fill { height: 100%; border-radius: 3px; background: var(--color-accent); }
+    .pm-pct { color: var(--color-accent); font-size: .78rem; font-weight: 700; min-width: 34px; text-align: right; }
+    .pm-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.07); }
+    .pm-stat { text-align: center; }
+    .pm-stat strong { display: block; font-family: var(--font-head); font-size: 1.35rem; font-weight: 700; color: var(--color-accent); }
+    .pm-stat span   { font-size: .72rem; color: rgba(255,255,255,.45); }
+    .indiv-header { text-align: center; margin-bottom: 42px; }
+    .indiv-header h3 { color: var(--color-primary); margin-bottom: 14px; }
+    .indiv-header p  { color: var(--color-text-muted); max-width: 580px; margin: 0 auto; }
+    .solutions-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .sol-card { background: var(--color-white); border-radius: var(--radius-md); padding: 34px 26px; border: 1px solid var(--color-border); transition: var(--tr); position: relative; overflow: hidden; }
+    .sol-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light)); transform: scaleX(0); transform-origin: left; transition: var(--tr); }
+    .sol-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .sol-card:hover::before { transform: scaleX(1); }
+    .sol-icon { width: 58px; height: 58px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 22px; }
+    .sol-icon.sw  { background: linear-gradient(135deg,rgba(24,158,255,.15),rgba(24,158,255,.06)); }
+    .sol-icon.pp  { background: linear-gradient(135deg,rgba(116,39,212,.15),rgba(116,39,212,.06)); }
+    .sol-icon.asp { background: linear-gradient(135deg,rgba(81,43,212,.15),rgba(81,43,212,.06)); }
+    .sol-card h4 { color: var(--color-primary); font-family: var(--font-head); margin-bottom: 10px; font-size: 1.15rem; }
+    .sol-card p  { color: var(--color-text-muted); font-size: .93rem; line-height: 1.75; }
+
+    /* PORTFOLIO */
+    .portfolio { background: var(--color-primary); padding: 100px 0; }
+    .portfolio .section-title h2 { color: var(--color-white); }
+    .portfolio .section-title p  { color: rgba(240,244,248,.65); }
+    .portfolio .title-line { background: var(--color-accent); }
+    .port-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; }
+    .port-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); border-radius: var(--radius-md); padding: 34px 32px; transition: var(--tr); position: relative; overflow: hidden; }
+    .port-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(232,160,32,.09),rgba(26,64,128,.18)); opacity: 0; transition: var(--tr); }
+    .port-card:hover { border-color: rgba(232,160,32,.28); transform: translateY(-4px); }
+    .port-card:hover::before { opacity: 1; }
+    .port-inner { position: relative; z-index: 1; }
+    .port-icon { width: 62px; height: 62px; background: rgba(232,160,32,.13); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.9rem; margin-bottom: 22px; }
+    .port-card h4 { color: var(--color-white); font-family: var(--font-head); font-size: 1.2rem; margin-bottom: 10px; }
+    .port-card p  { color: rgba(240,244,248,.6); font-size: .93rem; line-height: 1.75; margin-bottom: 18px; }
+    .tech-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tech-tag { background: rgba(232,160,32,.12); color: var(--color-accent); font-size: .77rem; font-weight: 600; padding: 4px 11px; border-radius: 100px; border: 1px solid rgba(232,160,32,.25); }
+
+    /* KONTAKT */
+    .kontakt { background: var(--color-white); padding: 100px 0; }
+    .kontakt-grid { display: grid; grid-template-columns: 1fr 1.45fr; gap: 72px; align-items: start; }
+    .ktk-info h2 { color: var(--color-primary); margin-bottom: 18px; }
+    .ktk-info > p { color: var(--color-text-muted); font-size: 1.03rem; margin-bottom: 36px; }
+    .ktk-details { display: flex; flex-direction: column; gap: 18px; }
+    .ktk-item { display: flex; align-items: flex-start; gap: 14px; }
+    .ktk-ico { width: 42px; height: 42px; flex-shrink: 0; background: linear-gradient(135deg,rgba(232,160,32,.14),rgba(232,160,32,.05)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+    .ktk-item strong { display: block; color: var(--color-primary); font-weight: 600; margin-bottom: 3px; }
+    .ktk-item span   { color: var(--color-text-muted); font-size: .93rem; }
+    .ktk-form { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 44px 40px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; font-size: .88rem; color: var(--color-text); margin-bottom: 7px; }
+    label .req { color: var(--color-accent); margin-left: 2px; }
+    input, select, textarea { width: 100%; padding: 11px 15px; border: 2px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: .97rem; color: var(--color-text); background: var(--color-white); transition: var(--tr); outline: none; appearance: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(11,34,64,.07); }
+    input.err, select.err, textarea.err { border-color: #E53E3E; }
+    .err-msg { color: #E53E3E; font-size: .82rem; margin-top: 5px; display: none; }
+    .err-msg.show { display: block; }
+    textarea { min-height: 130px; resize: vertical; }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A5568' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; }
+    .form-footer { display: flex; justify-content: flex-end; margin-top: 4px; }
+    .btn-send { display: inline-flex; align-items: center; gap: 9px; background: var(--color-primary); color: var(--color-white); border: 2px solid var(--color-primary); padding: 13px 36px; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: .97rem; font-weight: 600; cursor: pointer; transition: var(--tr); }
+    .btn-send:hover { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-primary); transform: translateY(-2px); box-shadow: var(--shadow-acc); }
+    .btn-send:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .form-note { padding: 13px 18px; border-radius: var(--radius-sm); margin-top: 18px; font-weight: 500; font-size: .93rem; display: none; }
+    .form-note.ok  { background: #F0FFF4; color: #276749; border: 1px solid #9AE6B4; }
+    .form-note.err { background: #FFF5F5; color: #C53030; border: 1px solid #FEB2B2; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinning { animation: spin .9s linear infinite; }
+
+    /* IMPRESSUM */
+    .impressum { background: var(--color-bg-alt); padding: 80px 0; }
+    .imp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .imp-card { background: var(--color-white); border-radius: var(--radius-md); padding: 38px; border: 1px solid var(--color-border); }
+    .imp-card h3 { color: var(--color-primary); font-size: 1.25rem; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 2px solid var(--color-accent); }
+    .imp-card p { color: var(--color-text-muted); margin-bottom: 11px; font-size: .93rem; }
+    .imp-card strong { color: var(--color-text); font-weight: 600; }
+    .ph { display: inline-block; background: rgba(232,160,32,.1); border: 1px dashed rgba(232,160,32,.45); color: var(--color-accent-dark); font-size: .78rem; padding: 2px 9px; border-radius: 4px; font-style: italic; }
+    .imp-warning { margin-top: 16px; padding: 12px 16px; background: rgba(232,160,32,.08); border-left: 3px solid var(--color-accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: .82rem; color: var(--color-accent-dark); font-style: italic; }
+
+    /* FOOTER */
+    .footer { background: var(--color-primary-dark); padding: 60px 0 30px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 44px; }
+    .footer-brand .nav-logo { display: block; font-size: 1.3rem; margin-bottom: 14px; }
+    .footer-brand p { color: rgba(240,244,248,.48); font-size: .88rem; line-height: 1.8; max-width: 280px; }
+    .footer-nav h4 { color: var(--color-white); font-family: var(--font-head); font-size: .88rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 18px; }
+    .footer-nav ul { display: flex; flex-direction: column; gap: 9px; }
+    .footer-nav a { color: rgba(240,244,248,.48); font-size: .88rem; transition: var(--tr); }
+    .footer-nav a:hover { color: var(--color-accent); }
+    .footer-sep { height: 1px; background: rgba(255,255,255,.07); margin-bottom: 28px; }
+    .footer-bot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bot p { color: rgba(240,244,248,.35); font-size: .83rem; }
+    .footer-bot .heart { color: var(--color-accent); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .uu-grid { grid-template-columns: 1fr; gap: 44px; }
+      .pkas-body { grid-template-columns: 1fr; gap: 36px; }
+      .kontakt-grid { grid-template-columns: 1fr; gap: 44px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; position: fixed; inset: 0; background: var(--color-primary); z-index: 999; flex-direction: column; justify-content: center; align-items: center; gap: 14px; }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1.2rem; padding: 10px 24px; }
+      .nav-toggle { display: flex; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .pkas-card { padding: 30px 22px; }
+      .pkas-features { grid-template-columns: 1fr; }
+      .solutions-grid { grid-template-columns: 1fr; }
+      .port-grid { grid-template-columns: 1fr; }
+      .ktk-form { padding: 26px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .imp-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bot { flex-direction: column; text-align: center; }
+      .uu-visual { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .uu-visual { grid-template-columns: 1fr; }
+      .vis-card.wide { grid-column: 1; }
+      .pm-bar { width: 70px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#home" class="nav-logo">Sterneder <em>Kraus</em> GbR</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#ueber-uns">Über Uns</a></li>
+        <li><a href="#produkte">Produkte</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="#impressum">Impressum</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Sterneder Kraus GbR
+      </div>
+      <h1 class="hero-title">Digitale Lösungen<br>für die <span class="accent">Baubranche</span></h1>
+      <p class="hero-sub">Sterneder Kraus GbR entwickelt professionelle Softwarelösungen – von spezialisierten Branchenwerkzeugen bis hin zu maßgeschneiderten digitalen Plattformen.</p>
+      <div class="hero-cta">
+        <a href="#produkte" class="btn btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Produkte entdecken
+        </a>
+        <a href="#kontakt" class="btn btn-ghost">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Kontakt aufnehmen
+        </a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <div class="wave" style="background:var(--color-primary)">
+    <svg viewBox="0 0 1440 72" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="72"><path d="M0,36 C360,72 1080,0 1440,36 L1440,72 L0,72 Z" fill="#ffffff"/></svg>
+  </div>
+
+  <!-- ÜBER UNS -->
+  <section class="ueber-uns" id="ueber-uns">
+    <div class="container">
+      <div class="uu-grid">
+        <div class="uu-text fade-up">
+          <span class="section-tag">Über uns</span>
+          <h2>Wer wir sind</h2>
+          <p>Sterneder Kraus GbR ist ein junges, innovatives Softwareunternehmen mit tiefem Verständnis für die Anforderungen der Baubranche und der modernen Unternehmensdigitalisierung. Wir verbinden technologische Exzellenz mit praxisnahem Branchenwissen – das Ergebnis sind Lösungen, die nicht nur funktionieren, sondern echten Mehrwert schaffen. Unser Team aus erfahrenen Entwicklern und Digitalisierungsexperten begleitet Sie von der ersten Idee bis zum produktiven Einsatz.</p>
+        </div>
+        <div class="uu-visual fade-up d2">
+          <div class="vis-card gold"><span class="vis-num">100%</span><span class="vis-label">Maßgeschneidert</span></div>
+          <div class="vis-card"><span class="vis-num">4+</span><span class="vis-label">Technologien</span></div>
+          <div class="vis-card wide">
+            <span class="vis-icon">🏗️</span>
+            <div><span class="vis-num" style="font-size:1.6rem">Baubranche</span><span class="vis-label">Spezialisierung</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card fade-up d1"><div class="feat-icon">🏛️</div><h4>Branchenerfahrung</h4><p>Wir kennen die Herausforderungen der Baubranche aus der Praxis und entwickeln Lösungen, die wirklich zu Ihrem Alltag passen.</p></div>
+        <div class="feat-card fade-up d2"><div class="feat-icon">⚡</div><h4>Moderne Technologien</h4><p>Von ASP.NET über die Microsoft Power Platform bis hin zu Shopware – wir setzen auf bewährte und zukunftssichere Technologien.</p></div>
+        <div class="feat-card fade-up d3"><div class="feat-icon">🤝</div><h4>Persönliche Betreuung</h4><p>Kurze Wege, direkte Kommunikation und ein persönlicher Ansprechpartner durch alle Projektphasen hindurch.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave" style="background:var(--color-white)">
+    <svg viewBox="0 0 1440 72" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="72"><path d="M0,36 C480,72 960,0 1440,36 L1440,72 L0,72 Z" fill="#EEF2F7"/></svg>
+  </div>
+
+  <!-- PRODUKTE -->
+  <section class="produkte" id="produkte">
+    <div class="container">
+      <div class="section-title fade-up">
+        <span class="title-line"></span>
+        <h2>Unsere Produkte</h2>
+        <p>Von spezialisierten Branchenlösungen bis hin zu individuellen Plattformen – entdecken Sie unser Angebot.</p>
+      </div>
+      <div class="pkas-card fade-up">
+        <div class="pkas-badge">⭐ Hauptprodukt</div>
+        <div class="pkas-body">
+          <div class="pkas-left">
+            <h3>PKAS – Projektplanungssoftware für die Baubranche</h3>
+            <p>PKAS ist unsere spezialisierte Projektplanungssoftware, entwickelt für die komplexen Anforderungen moderner Bauprojekte. Von der Ressourcenplanung über die Terminsteuerung bis hin zur projektübergreifenden Auslastungsübersicht – PKAS bringt Struktur in Ihre Bauprojekte und gibt Ihrem Team die Werkzeuge, die es wirklich braucht.</p>
+            <div class="pkas-features">
+              <div class="pkas-feat"><span class="chk">✓</span> Ressourcenplanung</div>
+              <div class="pkas-feat"><span class="chk">✓</span> Terminmanagement</div>
+              <div class="pkas-feat"><span class="chk">✓</span> Auslastungsübersicht</div>
+              <div class="pkas-feat"><span class="chk">✓</span> Bau-Workflows</div>
+              <div class="pkas-feat"><span class="chk">✓</span> Reporting &amp; Auswertungen</div>
+              <div class="pkas-feat"><span class="chk">✓</span> Skalierbar für alle Größen</div>
+            </div>
+            <a href="#kontakt" class="btn btn-primary">Mehr über PKAS erfahren <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+          <div class="pkas-mockup">
+            <div class="pm-header"><div class="pm-dots"><i></i><i></i><i></i></div><span>PKAS · Projektübersicht</span></div>
+            <div class="pm-body">
+              <div class="pm-row"><span class="pm-label">Hochhausbau München</span><div class="pm-bar"><div class="pm-bar-fill" style="width:75%"></div></div><span class="pm-pct">75%</span></div>
+              <div class="pm-row"><span class="pm-label">Brückenrenovierung B15</span><div class="pm-bar"><div class="pm-bar-fill" style="width:42%;background:#4FC3F7"></div></div><span class="pm-pct" style="color:#4FC3F7">42%</span></div>
+              <div class="pm-row"><span class="pm-label">Wohnkomplex Südstadt</span><div class="pm-bar"><div class="pm-bar-fill" style="width:91%;background:#81C784"></div></div><span class="pm-pct" style="color:#81C784">91%</span></div>
+              <div class="pm-row"><span class="pm-label">Gewerbeobjekt Nord</span><div class="pm-bar"><div class="pm-bar-fill" style="width:28%;background:#FFB74D"></div></div><span class="pm-pct" style="color:#FFB74D">28%</span></div>
+              <div class="pm-stats">
+                <div class="pm-stat"><strong>14</strong><span>Projekte</span></div>
+                <div class="pm-stat"><strong>32</strong><span>Mitarbeiter</span></div>
+                <div class="pm-stat"><strong>87%</strong><span>Auslastung</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="indiv-header fade-up">
+        <h3>Maßgeschneiderte Softwarelösungen</h3>
+        <p>Jedes Unternehmen ist einzigartig. Neben PKAS entwickeln wir individuelle Softwarelösungen, die exakt auf Ihre Prozesse und Anforderungen zugeschnitten sind.</p>
+      </div>
+      <div class="solutions-grid">
+        <div class="sol-card fade-up d1"><div class="sol-icon sw">🛒</div><h4>Shopware-Entwicklung</h4><p>Individuelle E-Commerce-Lösungen auf Basis von Shopware: Von der maßgeschneiderten Storefront bis zur Plugin-Entwicklung und Shop-Systemintegration.</p></div>
+        <div class="sol-card fade-up d2"><div class="sol-icon pp">⚙️</div><h4>Power Platform</h4><p>Prozessautomatisierung mit Microsoft Power Automate und gekoppelten Power Apps – für die digitale Transformation Ihrer Standardprozesse ohne großen Entwicklungsaufwand.</p></div>
+        <div class="sol-card fade-up d3"><div class="sol-icon asp">🚀</div><h4>ASP.NET SaaS</h4><p>Komplexe, skalierbare SaaS-Applikationen auf Basis von ASP.NET – für Unternehmen, die eine robuste, cloud-fähige Plattformlösung benötigen.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave" style="background:var(--color-bg-alt)">
+    <svg viewBox="0 0 1440 72" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="72"><path d="M0,18 C720,72 720,0 1440,54 L1440,72 L0,72 Z" fill="var(--color-primary)"/></svg>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <section class="portfolio" id="portfolio">
+    <div class="container">
+      <div class="section-title fade-up"><span class="title-line"></span><h2>Unsere Expertise</h2><p>Einblicke in unsere Projektarbeit und die Technologien, mit denen wir überzeugen.</p></div>
+      <div class="port-grid">
+        <div class="port-card fade-up d1"><div class="port-inner"><div class="port-icon">🏗️</div><h4>PKAS – Baubranche Projektplanung</h4><p>Spezialisierte Projektplanungssoftware für Bauunternehmen mit Ressourcen- und Terminmanagement, Auslastungsübersichten und baubranchenspezifischen Workflows.</p><div class="tech-tags"><span class="tech-tag">ASP.NET</span><span class="tech-tag">SaaS</span><span class="tech-tag">Baubranche</span></div></div></div>
+        <div class="port-card fade-up d2"><div class="port-inner"><div class="port-icon">🛒</div><h4>Shopware Shop-Implementierung</h4><p>Maßgeschneiderte E-Commerce-Plattform mit individuellen Plugins, optimierter Storefront und nahtloser ERP-Integration für reibungslose Geschäftsprozesse.</p><div class="tech-tags"><span class="tech-tag">Shopware 6</span><span class="tech-tag">PHP</span><span class="tech-tag">E-Commerce</span></div></div></div>
+        <div class="port-card fade-up d3"><div class="port-inner"><div class="port-icon">⚡</div><h4>Power Automate Digitalisierungsprojekt</h4><p>Vollständige Digitalisierung manueller Unternehmensprozesse mit Microsoft Power Automate und maßgeschneiderten Power Apps als Mobile- &amp; Desktop-Interface.</p><div class="tech-tags"><span class="tech-tag">Power Automate</span><span class="tech-tag">Power Apps</span><span class="tech-tag">Microsoft 365</span></div></div></div>
+        <div class="port-card fade-up d4"><div class="port-inner"><div class="port-icon">☁️</div><h4>ASP.NET SaaS Plattform</h4><p>Skalierbare, cloud-native SaaS-Lösung mit mehrmandantenfähiger Architektur, modernem REST-API-Design und flexiblem Subscription-Modell.</p><div class="tech-tags"><span class="tech-tag">ASP.NET Core</span><span class="tech-tag">Azure</span><span class="tech-tag">Cloud-native</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave" style="background:var(--color-primary)">
+    <svg viewBox="0 0 1440 72" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="72"><path d="M0,54 C360,0 1080,72 1440,18 L1440,72 L0,72 Z" fill="var(--color-white)"/></svg>
+  </div>
+
+  <!-- KONTAKT -->
+  <section class="kontakt" id="kontakt">
+    <div class="container">
+      <div class="kontakt-grid">
+        <div class="ktk-info fade-up">
+          <span class="section-tag">Kontakt</span>
+          <h2>Lassen Sie uns sprechen</h2>
+          <p>Sie haben ein Projekt im Kopf oder möchten mehr über unsere Lösungen erfahren? Wir freuen uns auf Ihre Nachricht.</p>
+          <div class="ktk-details">
+            <div class="ktk-item"><div class="ktk-ico">📧</div><div><strong>E-Mail</strong><span><span class="ph">PLATZHALTER – E-Mail eintragen</span></span></div></div>
+            <div class="ktk-item"><div class="ktk-ico">📞</div><div><strong>Telefon</strong><span><span class="ph">PLATZHALTER – Telefonnummer eintragen</span></span></div></div>
+            <div class="ktk-item"><div class="ktk-ico">📍</div><div><strong>Adresse</strong><span><span class="ph">PLATZHALTER – Adresse eintragen</span></span></div></div>
+          </div>
+        </div>
+        <div class="ktk-form fade-up d2">
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group"><label for="fname">Name <span class="req">*</span></label><input type="text" id="fname" name="name" placeholder="Max Mustermann" autocomplete="name"><span class="err-msg" id="fnameErr">Bitte geben Sie Ihren Namen an.</span></div>
+              <div class="form-group"><label for="femail">E-Mail <span class="req">*</span></label><input type="email" id="femail" name="email" placeholder="max@beispiel.de" autocomplete="email"><span class="err-msg" id="femailErr">Bitte geben Sie eine gültige E-Mail-Adresse an.</span></div>
+            </div>
+            <div class="form-group">
+              <label for="fbetreff">Betreff <span class="req">*</span></label>
+              <select id="fbetreff" name="betreff"><option value="">Bitte wählen …</option><option value="pkas">PKAS</option><option value="individual">Individuallösung</option><option value="allgemein">Allgemeine Anfrage</option><option value="sonstiges">Sonstiges</option></select>
+              <span class="err-msg" id="fbetreffErr">Bitte wählen Sie einen Betreff aus.</span>
+            </div>
+            <div class="form-group"><label for="fnachricht">Nachricht <span class="req">*</span></label><textarea id="fnachricht" name="nachricht" placeholder="Beschreiben Sie Ihr Anliegen oder Ihr Projekt …"></textarea><span class="err-msg" id="fnachrichtErr">Bitte geben Sie eine Nachricht ein (mind. 10 Zeichen).</span></div>
+            <div class="form-footer"><button type="submit" class="btn-send" id="btnSend">Nachricht senden <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+            <div class="form-note" id="formNote"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wave" style="background:var(--color-white)">
+    <svg viewBox="0 0 1440 72" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" height="72"><path d="M0,36 C240,0 480,72 720,36 C960,0 1200,72 1440,36 L1440,72 L0,72 Z" fill="var(--color-bg-alt)"/></svg>
+  </div>
+
+  <!-- IMPRESSUM -->
+  <section class="impressum" id="impressum">
+    <div class="container">
+      <div class="section-title fade-up"><span class="title-line"></span><h2>Impressum &amp; Datenschutz</h2></div>
+      <div class="imp-grid">
+        <div class="imp-card fade-up d1">
+          <h3>Impressum</h3>
+          <p><strong>Firmenname:</strong> Sterneder Kraus GbR</p>
+          <p><strong>Rechtsform:</strong> Gesellschaft bürgerlichen Rechts (GbR)</p>
+          <p><strong>Adresse:</strong> <span class="ph">Straße, PLZ Ort – bitte eintragen</span></p>
+          <p><strong>Telefon:</strong> <span class="ph">Telefonnummer – bitte eintragen</span></p>
+          <p><strong>E-Mail:</strong> <span class="ph">E-Mail-Adresse – bitte eintragen</span></p>
+          <p><strong>Umsatzsteuer-ID:</strong> <span class="ph">USt-IdNr. – bitte eintragen</span></p>
+          <p><strong>Gesellschafter:</strong> <span class="ph">Namen der Gesellschafter – bitte eintragen</span></p>
+        </div>
+        <div class="imp-card fade-up d2">
+          <h3>Datenschutzerklärung</h3>
+          <p><strong>Verantwortliche Stelle:</strong></p>
+          <p>Sterneder Kraus GbR · <span class="ph">Adresse – bitte eintragen</span></p>
+          <p style="margin-top:14px"><strong>Erhebung und Verarbeitung:</strong></p>
+          <p>Beim Besuch unserer Website werden automatisch Informationen allgemeiner Natur erfasst (Server-Logfiles). Personenbezogene Daten werden nur erhoben, wenn Sie uns diese freiwillig mitteilen (z. B. über das Kontaktformular).</p>
+          <p style="margin-top:14px"><strong>Ihre Rechte (DSGVO Art. 15–21):</strong></p>
+          <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung sowie Datenübertragbarkeit. Wenden Sie sich dazu an: <span class="ph">E-Mail – bitte eintragen</span></p>
+          <div class="imp-warning">⚠️ Dies ist ein Platzhalter-Datenschutztext. Bitte lassen Sie eine rechtskonforme Datenschutzerklärung durch einen Fachanwalt erstellen.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#home" class="nav-logo">Sterneder <em>Kraus</em> GbR</a>
+          <p>Professionelle Softwarelösungen für die Baubranche und darüber hinaus – von PKAS bis zur individuellen digitalen Plattform.</p>
+        </div>
+        <nav class="footer-nav"><h4>Navigation</h4><ul><li><a href="#home">Home</a></li><li><a href="#ueber-uns">Über Uns</a></li><li><a href="#produkte">Produkte</a></li><li><a href="#portfolio">Portfolio</a></li></ul></nav>
+        <nav class="footer-nav"><h4>Rechtliches</h4><ul><li><a href="#kontakt">Kontakt</a></li><li><a href="#impressum">Impressum</a></li><li><a href="#impressum">Datenschutz</a></li></ul></nav>
+      </div>
+      <div class="footer-sep"></div>
+      <div class="footer-bot">
+        <p>© 2025 Sterneder Kraus GbR – Alle Rechte vorbehalten</p>
+        <p>Designed &amp; Developed with <span class="heart">♥</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d');
+      let W,H;const particles=[],COUNT=75,DIST=140;
+      function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+      resize();window.addEventListener('resize',resize);
+      function Particle(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.38;this.vy=(Math.random()-.5)*.38;this.r=Math.random()*1.8+.4;this.op=Math.random()*.55+.18;}
+      Particle.prototype.tick=function(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W)this.vx*=-1;if(this.y<0||this.y>H)this.vy*=-1;};
+      Particle.prototype.draw=function(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='rgba(232,160,32,'+this.op+')';ctx.fill();};
+      for(var i=0;i<COUNT;i++)particles.push(new Particle());
+      function loop(){
+        ctx.clearRect(0,0,W,H);
+        for(var a=0;a<particles.length;a++){for(var b=a+1;b<particles.length;b++){var dx=particles[a].x-particles[b].x,dy=particles[a].y-particles[b].y,d=Math.sqrt(dx*dx+dy*dy);if(d<DIST){ctx.beginPath();ctx.moveTo(particles[a].x,particles[a].y);ctx.lineTo(particles[b].x,particles[b].y);ctx.strokeStyle='rgba(232,160,32,'+((1-d/DIST)*.22)+')';ctx.lineWidth=.7;ctx.stroke();}}}
+        particles.forEach(function(p){p.tick();p.draw();});
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+
+    var navbar=document.getElementById('navbar');
+    window.addEventListener('scroll',function(){navbar.classList.toggle('scrolled',window.scrollY>60);});
+
+    var toggle=document.getElementById('navToggle'),navLinks=document.getElementById('navLinks');
+    toggle.addEventListener('click',function(){toggle.classList.toggle('open');navLinks.classList.toggle('open');});
+    navLinks.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){toggle.classList.remove('open');navLinks.classList.remove('open');});});
+
+    var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+    document.querySelectorAll('.fade-up').forEach(function(el){io.observe(el);});
+
+    var sections=document.querySelectorAll('section[id]'),navAnchors=document.querySelectorAll('.nav-links a');
+    var sio=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){navAnchors.forEach(function(a){a.classList.remove('active');});var act=document.querySelector('.nav-links a[href="#'+e.target.id+'"]');if(act)act.classList.add('active');}});},{threshold:.35});
+    sections.forEach(function(s){sio.observe(s);});
+
+    var form=document.getElementById('contactForm'),btnSend=document.getElementById('btnSend'),formNote=document.getElementById('formNote');
+    function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+    function setErr(id,errId,show){var f=document.getElementById(id),e=document.getElementById(errId);f.classList.toggle('err',show);e.classList.toggle('show',show);}
+    ['fname','femail','fbetreff','fnachricht'].forEach(function(id){var el=document.getElementById(id);el.addEventListener('input',function(){setErr(id,id+'Err',false);});el.addEventListener('change',function(){setErr(id,id+'Err',false);});});
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var name=document.getElementById('fname').value.trim(),email=document.getElementById('femail').value.trim(),betreff=document.getElementById('fbetreff').value,nachricht=document.getElementById('fnachricht').value.trim(),ok=true;
+      setErr('fname','fnameErr',!name);if(!name)ok=false;
+      setErr('femail','femailErr',!isEmail(email));if(!isEmail(email))ok=false;
+      setErr('fbetreff','fbetreffErr',!betreff);if(!betreff)ok=false;
+      setErr('fnachricht','fnachrichtErr',nachricht.length<10);if(nachricht.length<10)ok=false;
+      if(!ok)return;
+      var orig=btnSend.innerHTML;
+      btnSend.innerHTML='<svg class="spinning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Wird gesendet …';
+      btnSend.disabled=true;
+      setTimeout(function(){formNote.textContent='✅ Vielen Dank! Ihre Nachricht wurde empfangen. Wir melden uns in Kürze bei Ihnen.';formNote.className='form-note ok';formNote.style.display='block';form.reset();btnSend.innerHTML=orig;btnSend.disabled=false;},1600);
+    });
+  </script>
+</body>
+</html>
